@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+<head>
+    <title>OAuth</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="//swx.cdn.skype.com/shared/v/1.2.15/SkypeBootstrap.min.js"></script>
+</head>
+<body>
+    <div class="form-horizontal">
+    <div class="form-group">
+    <label for="username" class="control-label">Username</label>
+    <div>
+    <input type="email" class="form-control" id="username" placeholder="Email">
+    </div>
+    </div>
+    <div class="form-group">
+    <label for="password" class="control-label">Password</label>
+    <div>
+    <input type="password" class="form-control" id="password" placeholder="Password">
+    </div>
+    </div>
+
+    <div class="form-group">
+    <div>
+    <button id="btnLogIn">Log in</button>
+    </div>
+    </div>
+    </div>
+
+    <script>
+
+        var config = {
+            apiKey: '595a1aeb-e6dc-4e5b-be96-bb38adc83da1',
+            apiKeyCC: '08c97289-7d57-404f-bd97-a6047403e370'
+        }
+        var client;
+        var hasToken = /^#access_token=/.test(location.hash);
+        var hasError = /^#error=/.test(location.hash);
+        var apiKey = 'a42fcebd-5b43-4b89-a065-74450fb91255';
+        //var apiKeyCC = '9c967f6b-a846-4df2-b43d-5167e47d81e1';
+        var client_id = 'aeec8f17-f490-4d2b-9365-d0958a420dfa';
+
+          $(function () {
+            'use strict';
+
+             if (!hasToken && !hasError) {
+            location.assign('https://login.microsoftonline.com/common/oauth2/authorize?response_type=token' +
+                '&client_id=' + client_id +
+                '&redirect_uri=' + location.href +
+                '&resource=https://webdir.online.lync.com');
+            }
+
+            console.log('logged in');
+            
+            Skype.initialize({
+                    apiKey: apiKey,
+                }, function (api) {
+                    app = new api.application(); 
+                    console.log('successfully initialized.')          
+                }, function (err) {
+                    alert('some error occurred: ' + err);
+                });
+
+            app.signInManager.signIn({
+                client_id: client_id,
+                cors: true,
+                redirect_uri: 'hello.html',
+                origins: [ "https://webdir.online.lync.com/autodiscover/autodiscoverservice.svc/root" ],
+                version: 'myapp/1.0.0.0'
+            });
+/*
+            $('#btnLogIn').click(function () {
+            // start signing in
+            client.signInManager.signIn({
+              username: $('#username').val(),
+              password: $('#password').val()
+            }).then(function () {
+                //log in worked!
+                console.log('signed in!');
+              }, function (error) {
+                //Something went wrong.
+                console.log(error);
+              });
+          });*/
+      });
+
+          
+
+
+    </script>
+</body>
+</html>

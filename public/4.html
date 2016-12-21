@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+<head>
+  <title>My Skype Web SDK app</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script src="https://swx.cdn.skype.com/shared/v/1.2.15/SkypeBootstrap.min.js"></script>
+</head>
+<body>
+  <div class="form-horizontal">
+      <div class="form-group">
+      <label for="username" class="control-label">Username</label>
+      <div>
+      <input type="email" class="form-control" id="username" placeholder="Email">
+      </div>
+      </div>
+      <div class="form-group">
+      <label for="password" class="control-label">Password</label>
+      <div>
+      <input type="password" class="form-control" id="password" placeholder="Password">
+      </div>
+      </div>
+
+      <div class="form-group">
+      <div>
+      <button id="btnLogIn">Log in</button>
+      </div>
+      </div>
+  </div>
+  <script>
+
+    var app;
+    var config = {
+            apiKey: '595a1aeb-e6dc-4e5b-be96-bb38adc83da1',
+            apiKeyCC: '08c97289-7d57-404f-bd97-a6047403e370'
+        }
+    Skype.initialize({ apiKey: config.apiKey }, api => {
+        
+        app = new api.application;
+        console.log("load the sdk");
+
+      }, err => {
+        console.log("cannot load the sdk package", err);
+      });
+
+    $('#btnLogIn').click(function () {
+      // start signing in
+      app.signInManager.signIn({
+        username: $('#username').val(),
+        password: $('#password').val()
+      }).then(function () {
+          //log in worked!
+          console.log('signed in!');
+          var persons = application.personsAndGroupsManager.all.persons;
+          persons.get().then(function (contacts) {
+            console.log(contacts);
+          }, function (error) {
+          // Notify search error
+          });
+
+        }, function (error) {
+          //Something went wrong.
+          console.log(error);
+        });
+    });
+
+    
+  </script>
+</body>
+</html>

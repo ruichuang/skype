@@ -1,0 +1,82 @@
+
+<!doctype html>
+<html>
+<head>
+    <title>OAuth</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="//swx.cdn.skype.com/shared/v/1.2.15/SkypeBootstrap.min.js"></script>
+</head>
+<body>
+    <div class="form-horizontal">
+    <div class="form-group">
+    <label for="username" class="control-label">Username</label>
+    <div>
+    <input type="email" class="form-control" id="username" placeholder="Email">
+    </div>
+    </div>
+    <div class="form-group">
+    <label for="password" class="control-label">Password</label>
+    <div>
+    <input type="password" class="form-control" id="password" placeholder="Password">
+    </div>
+    </div>
+
+    <div class="form-group">
+    <div>
+    <button id="btnLogIn">Log in</button>
+    </div>
+    </div>
+    </div>
+
+    <script>
+        var hasToken = /^#access_token=/.test(location.hash);
+        var hasError = /^#error=/.test(location.hash);
+
+        var client_id = 'aeec8f17-f490-4d2b-9365-d0958a420dfa';
+
+        var app, convoControlApi;
+
+        // redirect to Org ID if there is no token in the URL
+        if (!hasToken && !hasError) {
+            location.assign('https://login.microsoftonline.com/common/oauth2/authorize?response_type=token' +
+                '&client_id=' + client_id +
+                '&redirect_uri=' + location.href +
+                '&resource=https://webdir.online.lync.com');
+        }
+
+        console.log('logged in');
+
+        // show the UI if the user has signed in
+        if (hasToken) {
+        // Use Skype Web SDK to start signing in 
+             $(function () {
+
+                'use strict';
+
+                var client = new Skype.Web.Model.Application;
+
+                $('#btnLogIn').click(function () {
+
+                    // start signing in
+                    client.signInManager.signIn({
+                    username: $('#username').val(),
+                    password: $('#password').val()
+                    }).then(function () {
+                    //log in worked!
+                    alert('Logged in!');
+                    }, function (error) {
+                    //Something went wrong.
+                    alert(error);
+                    });
+                });
+            });
+            
+        }
+
+        if (hasError) {
+            console.log(location.hash);
+        }
+
+    </script>
+</body>
+</html>
